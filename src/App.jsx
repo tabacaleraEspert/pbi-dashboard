@@ -8,6 +8,7 @@ import EficienciaMaquina from './components/EficienciaMaquina';
 import EficienciaTabaco from './components/EficienciaTabaco';
 import VariablesFisicas from './components/VariablesFisicas';
 import FiltrosTiempo from './components/FiltrosTiempo';
+import ParetoGD1 from './components/ParetoGD1';
 
 function App() {
   const [timeFilter, setTimeFilter] = useState('diario');
@@ -28,6 +29,7 @@ function App() {
               <li><Link to="/eficiencia-maquina">Eficiencia Máquina</Link></li>
               <li><Link to="/eficiencia-tabaco">Eficiencia Tabaco</Link></li>
               <li><Link to="/variables-fisicas">Variables Físicas</Link></li>
+              <li><Link to="/pareto-GD1">Pareto GD1</Link></li>
             </ul>
           </nav>
         </header>
@@ -44,6 +46,7 @@ function App() {
             <Route path="/eficiencia-maquina" element={<EficienciaMaquina timeFilter={timeFilter} />} />
             <Route path="/eficiencia-tabaco" element={<EficienciaTabaco timeFilter={timeFilter} />} />
             <Route path="/variables-fisicas" element={<VariablesFisicas timeFilter={timeFilter} />} />
+            <Route path="/pareto-GD1" element={<ParetoGD1 timeFilter={timeFilter} />} />
             {/* Ruta por defecto */}
             <Route path="/" element={<Seguridad timeFilter={timeFilter} />} />
           </Routes>
