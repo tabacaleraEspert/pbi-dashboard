@@ -1,56 +1,49 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Power BI Slideshow</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.19.0/powerbi.min.js"></script>
+  <title>Power BI Auto Page Switch</title>
   <style>
-    html, body, #reportContainer {
-      height: 100%;
+    html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div id="reportContainer"></div>
+  <iframe id="pbiFrame" src=""></iframe>
 
   <script>
-    const embedUrl = "https://app.powerbi.com/view?r=eyJrIjoiMjk1Y2Q5YzYtYmJjOC00YzU5LTk0NmEtOThmODg3MTc2YTg1IiwidCI6ImRhN2M2Mzk2LTExNzAtNGYwNi05Njk4LTBjNzYwZmQ1ZWZlYiIsImMiOjR9";
-    const reportContainer = document.getElementById('reportContainer');
+    const baseUrl = "https://app.powerbi.com/view?r=eyJrIjoiMjk1Y2Q5YzYtYmJjOC00YzU5LTk0NmEtOThmODg3MTc2YTg1IiwidCI6ImRhN2M2Mzk2LTExNzAtNGYwNi05Njk4LTBjNzYwZmQ1ZWZlYiIsImMiOjR9";
+    const pages = [
+      "ReportSection",       // Página 1
+      "ReportSection1",      // Página 2
+      "ReportSection2",      // Página 3
+      "ReportSection3",      // Página 4
+      "ReportSection4",      // Página 5
+      "ReportSection5",      // Página 6
+      "ReportSection6",      // Página 7
+      "ReportSection7",      // Página 8
+      "ReportSection8"       // Página 9
+    ];
 
-    const config = {
-      type: 'report',
-      embedUrl: embedUrl,
-      tokenType: window['powerbi-client'].models.TokenType.Embed,
-      settings: {
-        panes: {
-          filters: { visible: false },
-          pageNavigation: { visible: false }
-        }
-      }
-    };
-
-    const report = powerbi.embed(reportContainer, config);
-
-    // Tiempo por página (en milisegundos): 15 segundos para probar
-    const INTERVALO = 15000;
-
-    let pages = [];
     let index = 0;
+    const intervalo = 15000; // 15 segundos (para probar)
 
-    report.on('loaded', function () {
-      report.getPages().then(p => {
-        pages = p.slice(0, 9); // solo las primeras 9 páginas
-        if (pages.length > 0) {
-          pages[0].setActive(); // mostrar la primera al inicio
+    function cargarPagina() {
+      const fullUrl = `${baseUrl}&pageName=${pages[index]}`;
+      document.getElementById("pbiFrame").src = fullUrl;
+      index = (index + 1) % pages.length;
+    }
 
-          setInterval(() => {
-            index = (index + 1) % pages.length;
-            pages[index].setActive();
-          }, INTERVALO);
-        }
-      });
-    });
+    cargarPagina(); // primera carga
+    setInterval(cargarPagina, intervalo); // cambia cada N segundos
   </script>
 </body>
 </html>
