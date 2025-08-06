@@ -1,13 +1,56 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Power BI Slideshow</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.19.0/powerbi.min.js"></script>
+  <style>
+    html, body, #reportContainer {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="reportContainer"></div>
+
+  <script>
+    const embedUrl = "https://app.powerbi.com/view?r=eyJrIjoiMjk1Y2Q5YzYtYmJjOC00YzU5LTk0NmEtOThmODg3MTc2YTg1IiwidCI6ImRhN2M2Mzk2LTExNzAtNGYwNi05Njk4LTBjNzYwZmQ1ZWZlYiIsImMiOjR9";
+    const reportContainer = document.getElementById('reportContainer');
+
+    const config = {
+      type: 'report',
+      embedUrl: embedUrl,
+      tokenType: window['powerbi-client'].models.TokenType.Embed,
+      settings: {
+        panes: {
+          filters: { visible: false },
+          pageNavigation: { visible: false }
+        }
+      }
+    };
+
+    const report = powerbi.embed(reportContainer, config);
+
+    // Tiempo por página (en milisegundos): 15 segundos para probar
+    const INTERVALO = 15000;
+
+    let pages = [];
+    let index = 0;
+
+    report.on('loaded', function () {
+      report.getPages().then(p => {
+        pages = p.slice(0, 9); // solo las primeras 9 páginas
+        if (pages.length > 0) {
+          pages[0].setActive(); // mostrar la primera al inicio
+
+          setInterval(() => {
+            index = (index + 1) % pages.length;
+            pages[index].setActive();
+          }, INTERVALO);
+        }
+      });
+    });
+  </script>
+</body>
 </html>
